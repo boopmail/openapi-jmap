@@ -1,0 +1,41 @@
+openapi: 3.1.0
+info:
+  title: JSON Meta Application Protocol
+  description: This is a sample API
+  version: 0.1.0
+
+servers:
+  - url: https://jmap.example.com
+    description: API Location
+  - url: https://jmap.example.com/.well-known
+    description: Session Resource
+
+paths:
+  /jmap:
+    get:
+      security:
+        - {}
+      summary: Get JMAP Session
+      operationId: Session
+      responses:
+        "200":
+          description: A JMAP Session object.
+          headers:
+            Cache-Control:
+              schema:
+                default: no-cache, no-store, must-revalidate
+                type: string
+              description: "Implementors must take care to avoid inappropriate caching of the Session object at the HTTP layer. Since the client should only refetch when it detects there is a change (via the sessionState property of an API response), it is RECOMMENDED to disable HTTP caching altogether, for example, by setting Cache-Control: `no-cache, no-store, must-revalidate` on the response."
+          content:
+            application/json;jmapVersion=rfc-8621:
+              schema:
+                $ref: "#/components/schemas/Session"
+components:
+  schemas:
+    # JMAP Core / Components
+    Session:
+      $ref: core/components/schemas/Session.yml
+    CoreCapability:
+      $ref: core/components/schemas/CoreCapability.yml
+    Account:
+      $ref: core/components/schemas/Account.yml

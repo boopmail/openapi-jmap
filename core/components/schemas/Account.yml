@@ -1,0 +1,27 @@
+title: A map of an account id to an Account object for each account (see Section 1.6.2) the user has access to.
+type: object
+additionalProperties: false
+required:
+  - name
+  - isPersonal
+  - isReadOnly
+  - accountCapabilities
+properties:
+  name:
+    type: string
+    description: A user-friendly string to show when presenting content from this account, e.g., the email address representing the owner of the account.
+  isPersonal:
+    type: boolean
+    description: This is `true` if the account belongs to the authenticated user rather than a group account or a personal account of another user that has been shared with them.
+    default: true
+  isReadOnly:
+    type: boolean
+    description: This is `true` if the entire account is read-only.
+    default: false
+  accountCapabilities:
+    type: object
+    # TODO: Remove core, add mail, cal, etc.
+    properties:
+      "urn:ietf:params:jmap:core":
+        $ref: "CoreCapability.yml"
+    additionalProperties: true

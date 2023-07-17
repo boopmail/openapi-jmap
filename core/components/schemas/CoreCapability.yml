@@ -1,0 +1,67 @@
+type: object
+additionalProperties: false
+required:
+  - maxSizeUpload
+  - maxConcurrentUpload
+  - maxSizeRequest
+  - maxConcurrentRequests
+  - maxCallsInRequest
+  - maxObjectsInGet
+  - maxObjectsInSet
+  - collationAlgorithms
+properties:
+  maxSizeUpload:
+    type: integer
+    format: int64
+    description: The maximum file size, in octets, that the server will accept for a single file upload (for any purpose).
+    default: 50000000
+    minimum: 0
+    maximum: 9007199254740991
+  maxConcurrentUpload:
+    type: integer
+    format: int64
+    description: The maximum number of concurrent requests the server will accept to the upload endpoint.
+    default: 4
+    minimum: 0
+    maximum: 9007199254740991
+  maxSizeRequest:
+    type: integer
+    format: int64
+    description: The maximum size, in octets, that the server will accept for a single request to the API endpoint.
+    default: 10000000
+    minimum: 0
+    maximum: 9007199254740991
+  maxConcurrentRequests:
+    type: integer
+    format: int64
+    description: The maximum number of concurrent requests the server will accept to the API endpoint.
+    default: 4
+    minimum: 0
+    maximum: 9007199254740991
+  maxCallsInRequest:
+    type: integer
+    format: int64
+    description: The maximum number of method calls the server will accept in a single request to the API endpoint.
+    default: 16
+    minimum: 0
+    maximum: 9007199254740991
+  maxObjectsInGet:
+    type: integer
+    format: int64
+    description: The maximum number of objects that the client may request in a single `/get` type method call.
+    default: 500
+    minimum: 0
+    maximum: 9007199254740991
+  maxObjectsInSet:
+    type: integer
+    format: int64
+    description: The maximum number of objects the client may send to create, update, or destroy in a single `/set` type method call. This is the combined total, e.g., if the maximum is 10, you could not create 7 objects and destroy 6, as this would be 13 actions, which exceeds the limit.
+    default: 500
+    minimum: 0
+    maximum: 9007199254740991
+  collationAlgorithms:
+    type: array
+    items:
+      type: string
+    description: A list of identifiers for algorithms registered in the collation registry, as defined in [@!RFC4790], that the server supports for sorting when querying records.
+    minLength: 1
