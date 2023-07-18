@@ -5,8 +5,6 @@ info:
   version: 0.1.0
 
 servers:
-  - url: https://jmap.example.com
-    description: API Location
   - url: https://jmap.example.com/.well-known
     description: Session Resource
 
@@ -30,6 +28,33 @@ paths:
             application/json;jmapVersion=rfc-8621:
               schema:
                 $ref: "#/components/schemas/Session"
+    post:
+      security:
+        - {}
+      summary: Make JMAP Request
+      operationId: API
+      requestBody: 
+        required: true
+        content: 
+          application/json;jmapVersion=rfc-8621:
+            schema:
+               $ref: "#/components/schemas/Request"
+      responses:
+        "200":
+          description: A JMAP Response object.
+          headers:
+            Cache-Control:
+              schema:
+                default: no-cache, no-store, must-revalidate
+                type: string
+              description: "Implementors must take care to avoid inappropriate caching of the Session object at the HTTP layer. Since the client should only refetch when it detects there is a change (via the sessionState property of an API response), it is RECOMMENDED to disable HTTP caching altogether, for example, by setting Cache-Control: `no-cache, no-store, must-revalidate` on the response."
+          content:
+            application/json;jmapVersion=rfc-8621:
+              schema:
+                $ref: "#/components/schemas/Response"
+        "400":
+          $ref: '#/components/responses/RequestLevelError'
+                  
 components:
   schemas:
     # JMAP Core / Components
@@ -39,3 +64,12 @@ components:
       $ref: core/components/schemas/CoreCapability.yml
     Account:
       $ref: core/components/schemas/Account.yml
+    Invocation:
+      $ref: core/components/schemas/Invocation.yml
+    Request:
+      $ref: core/components/schemas/Request.yml
+    Response:
+      $ref: core/components/schemas/Response.yml
+  responses: 
+    RequestLevelError:
+      $ref: core/components/responses/RequestLevelError.yml

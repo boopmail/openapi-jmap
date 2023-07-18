@@ -1,0 +1,41 @@
+description: RequestLevelError
+content:
+  application/json;jmapVersion=rfc-8621:
+    schema:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - "urn:ietf:params:jmap:error:unknownCapability"
+            - "urn:ietf:params:jmap:error:notJSON"
+            - "urn:ietf:params:jmap:error:notRequest"
+            - "urn:ietf:params:jmap:error:limit"
+        status:
+          type: integer
+          default: 400
+        detail:
+          type: string
+        limit:
+          type: string
+          description: MUST be present on the object if type is `urn:ietf:params:jmap:error:limit`, containing the name of the limit being applied.
+      required:
+        - type
+        - status
+        - detail
+    examples: 
+      UnknownCapability:
+        summary: Unknown Capability
+        description: The client included a capability in the “using” property of the request that the server does not support.
+        value: 
+          type: "urn:ietf:params:jmap:error:unknownCapability"
+          status: 400
+          detail: The Request object used capability 'https://example.com/apis/foobar', which is not supported by this server.
+      Limit:
+        summary: Limit Exceeded
+        description: The request was not processed as it would have exceeded one of the request limits defined on the capability object, such as maxSizeRequest, maxCallsInRequest, or maxConcurrentRequests.
+        value: 
+          type: "urn:ietf:params:jmap:error:limit"
+          status: 400
+          limit: maxSizeRequest
+          detail: The request is larger than the server is willing to process.

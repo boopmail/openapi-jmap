@@ -1,0 +1,34 @@
+title: Method Invocation
+description: |
+  Method calls and responses are represented by the Invocation data type. This is a tuple,
+  represented as a JSON array containing three elements:
+    * A String name of the method to call or of the response.
+    * A String[*] object containing named arguments for that method or response.
+    * A String method call id: an arbitrary string from the client to be echoed back with
+      the responses emitted by that method call (a method may return 1 or more responses, as it
+      may make implicit calls to other methods; all responses initiated by this method call get
+      the same method call id in the response).
+type: array
+items:
+  anyOf: 
+    - type: string
+      title: Name
+      description: Name of the method to call or of the response.
+    - type: object
+      title: Arguments
+      description: An object containing named arguments for that method or response.
+      additionalProperties:
+        anyOf:
+          - type: object
+            title: Linked Object
+            properties: 
+              resultOf:
+                type: string
+              name:
+                type: string
+              path:
+                type: string
+          - type: string
+    - type: string
+      title: Method Call ID
+      description: An arbitrary string from the client to be echoed back with the responses emitted by that method call (a method may return 1 or more responses, as it may make implicit calls to other methods; all responses initiated by this method call get the same method call id in the response).

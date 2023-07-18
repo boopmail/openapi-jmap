@@ -1,0 +1,49 @@
+title: Method-Level Error
+description: |
+  If a method encounters an error, the appropriate error response MUST be inserted at the current
+  point in the methodResponses array and, unless otherwise specified, further processing MUST NOT
+  happen within that method call.
+
+  Any further method calls in the request MUST then be processed as normal. Errors at the method
+  level MUST NOT generate an HTTP-level error.
+type: array
+example: ["error", { type: serverUnavailable }, "c2"]
+items:
+  anyOf:
+    - type: string
+      title: Name
+      default: error
+    - type: object
+      title: Arguments
+      description: An object containing named arguments for that method or response.
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          enum:
+            - serverUnavailable # Some internal server resource was temporarily unavailable. Attempting the same operation later (perhaps after a backoff with a random factor) may succeed.
+            - serverFail # An unexpected or unknown error occurred during the processing of the call. A description property should provide more details about the error. The method call made no changes to the server’s state. Attempting the same operation again is expected to fail again. Contacting the service administrator is likely necessary to resolve this problem if it is persistent.
+            - serverPartialFail # Some, but not all, expected changes described by the method occurred. The client MUST resynchronise impacted data to determine server state. Use of this error is strongly discouraged.
+            - unknownMethod # The server does not recognise this method name.
+            - invalidArguments # One of the arguments is of the wrong type or is otherwise invalid, or a required argument is missing. A description property MAY be present to help debug with an explanation of what the problem was. This is a non-localised string, and it is not intended to be shown directly to end users.
+            - invalidResultReference # The method used a result reference for one of its arguments (see Section 3.7), but this failed to resolve.
+            - forbidden # The method and arguments are valid, but executing the method would violate an Access Control List (ACL) or other permissions policy.
+            - accountNotFound # The accountId does not correspond to a valid account.
+            - accountNotSupportedByMethod # The accountId given corresponds to a valid account, but the account does not support this method or data type.
+            - accountReadOnly # This method modifies state, but the account is read-only (as returned on the corresponding Account object in the JMAP Session resource).
+      additionalProperties:
+        anyOf:
+          - type: object
+            title: Linked Object
+            properties: 
+              resultOf:
+                type: string
+              name:
+                type: string
+              path:
+                type: string
+          - type: string
+    - type: string
+      title: Method Call ID
+      description: An arbitrary string from the client to be echoed back with the responses emitted by that method call (a method may return 1 or more responses, as it may make implicit calls to other methods; all responses initiated by this method call get the same method call id in the response).
